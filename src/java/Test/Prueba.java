@@ -12,6 +12,7 @@ public static void main(String[] args){
 Prueba evaluar = new Prueba();
 
 evaluar.guardaCategoria();
+evaluar.eliminarCategoria();
 evaluar.listarCategorias();
 //evaluar.editarCategoria();
 }
@@ -40,6 +41,12 @@ guarda_cat.setNom_categoria("Cosmeticos");
 guarda_cat.setId_categoria(7);
 guarda_cat.setEstado_categoria(1);
 categoria.guardarCat(guarda_cat);
+}
+
+public void eliminarCategoria(){
+CategoriaDAO categoria = new CategoriaDAOImplementar();
+
+categoria.borrarCat(7); //Se eliminara la categoria
 
 }
 
