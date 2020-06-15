@@ -26,7 +26,6 @@ public CategoriaDAOImplementar(){
 this.conn=FactoryConexionDB.open(FactoryConexionDB.MySQL);
 
 
-
 StringBuilder miSQL = new StringBuilder(); //CONSTRUIR LA CONSULTA
 
 miSQL.append("SELECT * FROM  tb_categoria;"); //AGREGAR LA CONSULTA
@@ -73,10 +72,12 @@ Categoria categoria = new Categoria (); //objeto categoria para devolver datos
 StringBuilder miSQL =   new StringBuilder(); //CONSTRUIR LA CONSULTA
 
 //AGREGAR LA CONSULTA
-miSQL.append("SELECT * FROM  tb_categoria  WHERE  id_categoria =").append(id_cat_edit);
+miSQL.append("SELECT * FROM  tb_categoria  WHERE  id_categoria = ").append(id_cat_edit);
+
 try{//REALIZAR LA CONSULTA
     
 ResultSet resultadoSQL = this.conn.consultaSQL(miSQL.toString());
+
 while(resultadoSQL.next()){
 categoria.setId_categoria(resultadoSQL.getInt("id_categoria"));
 categoria.setNom_categoria(resultadoSQL.getString("nom_categoria"));
@@ -100,6 +101,7 @@ return categoria;
 public boolean guardarCat(Categoria categoria) {
     
 this.conn = FactoryConexionDB.open(FactoryConexionDB.MySQL); //hacer la conexion
+
 boolean guarda = false; //BANDERA DE RESULTADO
 try{
     
@@ -117,9 +119,21 @@ miSQL.append(");");
 this.conn.ejecutarSQL(miSQL.toString());
 
 }else if(categoria.getId_categoria() >0){  //Actualizar id categoria mayores a 0
-    
-}
+StringBuilder miSQL =   new StringBuilder (); 
 
+miSQL.append("UPDATE  tb_categoria SET  id_categoria = ").append(categoria.getId_categoria());
+
+miSQL.append(" , nom_categoria =  ' ").append(categoria.getNom_categoria());
+
+miSQL.append(" ' , estado_categoria =  ").append(categoria.getEstado_categoria());
+
+miSQL.append(" WHERE id_categoria = ").append(categoria.getId_categoria()).append(";");
+
+//INVOCAR EL METODO PARA EJECUTAR LA CONSULTA
+this.conn.ejecutarSQL(miSQL.toString());
+
+}
+guarda= true;
 }catch(Exception e){
 
 }finally{
@@ -128,31 +142,31 @@ this.conn.cerrarConexion(); //CERRAR CONEXION
 
 }
 return guarda;
-
     
 }
 
     
     
+  
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    @Override
-    public boolean borrarCat(int id_cat_borrar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+@Override
+public boolean borrarCat(int id_cat_borrar) {
+this.conn=FactoryConexionDB.open(FactoryConexionDB.MySQL);
+boolean borra= false; //BANDERA DE RESULTADO
+try {
+StringBuilder miSQL =   new StringBuilder (); //CONSTRUIR LA CONSULTA
+miSQL.append("DELETE FROM tb_categoria WHERE id_categoria= ").append(id_cat_borrar);
+this.conn.ejecutarSQL(miSQL.toString());
+borra = true;
+
+}catch(Exception e){
+
+}finally{
+this.conn.cerrarConexion(); //Cierra la conexion
 }
+
+return borra;
+
+}
+}
+

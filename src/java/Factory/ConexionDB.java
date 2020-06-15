@@ -33,6 +33,9 @@ ex.printStackTrace();
 return rs;
 }
 
+
+//METODO PARA EJECUTAR
+
 public boolean ejecutarSQL(String consulta){
 Statement st; //OBJETO ES ELL ENCARGADO DE EJECUTAR LAS CONSULTAS
 boolean guardar = true;
@@ -43,6 +46,7 @@ st.executeUpdate(consulta); //Se ejecuta la consulta
 
  
 }catch(SQLException ex){
+    
 guardar = false;
 ex.printStackTrace();
 
