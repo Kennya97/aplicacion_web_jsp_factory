@@ -10,7 +10,10 @@ public class Prueba {
 public static void main(String[] args){
 
 Prueba evaluar = new Prueba();
-evaluar.editarCategoria();
+
+evaluar.guardaCategoria();
+evaluar.listarCategorias();
+//evaluar.editarCategoria();
 }
 
 public void listarCategorias(){
@@ -32,5 +35,13 @@ System.out.println("ID:"+cat_edit.getId_categoria() + " NOMBRE:"+cat_edit.getNom
 
 }
 
+public void guardaCategoria(){
+CategoriaDAO categoria = new CategoriaDAOImplementar();
+Categoria guarda_cat = new Categoria();
+guarda_cat.setNom_categoria("Bebidas");
+guarda_cat.setEstado_categoria(1);
+categoria.guardarCat(guarda_cat);
+
+}
 
 }

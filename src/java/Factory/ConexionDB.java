@@ -33,6 +33,24 @@ ex.printStackTrace();
 return rs;
 }
 
+public boolean ejecutarSQL(String consulta){
+Statement st; //OBJETO ES ELL ENCARGADO DE EJECUTAR LAS CONSULTAS
+boolean guardar = true;
+
+try{
+st= conexion.createStatement();
+st.executeUpdate(consulta); //Se ejecuta la consulta
+
+ 
+}catch(SQLException ex){
+guardar = false;
+ex.printStackTrace();
+
+}
+return guardar;
+}
+
+
 //METODO PARA CERRAR LA CONEXION
 public boolean cerrarConexion(){
 boolean ok = true;

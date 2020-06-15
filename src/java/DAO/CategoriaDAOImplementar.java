@@ -50,6 +50,7 @@ lista.add(categoria); //agregar al array cada registro
 }catch(Exception ex){
     
 }finally{
+    
 this.conn.cerrarConexion(); //PARA CERRAR LA CONEXION
 }
 return lista;
@@ -94,35 +95,61 @@ return categoria;
 
 }
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    @Override
-    public boolean guardarCat(Categoria categoria) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
+@Override
+public boolean guardarCat(Categoria categoria) {
+    
+this.conn = FactoryConexionDB.open(FactoryConexionDB.MySQL); //hacer la conexion
+boolean guarda = false; //BANDERA DE RESULTADO
+try{
+    
+if(categoria.getId_categoria() ==0){  //PARA CUANDO ES UNA NUEVA CATEGORIA
+
+StringBuilder miSQL =   new StringBuilder (); //CONSTRUIR LA CONSULTA
+
+//AGREGAR LA CONSULTA 
+
+miSQL.append("INSERT INTO tb_categoria(nom_categoria,  estado_categoria) VALUES(' "); 
+miSQL.append(categoria.getNom_categoria() +" ' , ").append(categoria.getEstado_categoria() );
+miSQL.append(");");
+
+//INVOCAR MÉTODO PARA EJECUTR LA CONSULTA
+this.conn.ejecutarSQL(miSQL.toString());
+
+}else if(categoria.getId_categoria() >0){  //Actualizar id categoria mayores a 0
+    
+}
+
+}catch(Exception e){
+
+}finally{
+    
+this.conn.cerrarConexion(); //CERRAR CONEXION
+
+}
+return guarda;
+
+    
+}
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     @Override
     public boolean borrarCat(int id_cat_borrar) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
