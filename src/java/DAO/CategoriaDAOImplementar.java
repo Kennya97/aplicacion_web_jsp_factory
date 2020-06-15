@@ -14,15 +14,18 @@ public class CategoriaDAOImplementar implements CategoriaDAO  {
 ConexionDB conn;//CREAR EL OBJETO TIPO CONEXION
 
 public CategoriaDAOImplementar(){
+
 //DEFINIR A LA BASE DE DATOS QUE SE CONECTARA POR DEFECTO
-this.conn=FactoryConexionDB.open(FactoryConexionDB.MySQL);
-    
 }
     
     
     
-    @Override
+@Override
  public List<Categoria> Listar() {
+    
+this.conn=FactoryConexionDB.open(FactoryConexionDB.MySQL);
+
+
 
 StringBuilder miSQL = new StringBuilder(); //CONSTRUIR LA CONSULTA
 
@@ -58,11 +61,63 @@ return lista;
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    
+    
+    
+    
     @Override
-    public Categoria editarCat(int id_cat_edit) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+public Categoria editarCat(int id_cat_edit) {
+this.conn = FactoryConexionDB.open(FactoryConexionDB.MySQL); //hacer la conexion
+Categoria categoria = new Categoria (); //objeto categoria para devolver datos
+StringBuilder miSQL =   new StringBuilder(); //CONSTRUIR LA CONSULTA
 
+//AGREGAR LA CONSULTA
+miSQL.append("SELECT * FROM  tb_categoria  WHERE  id_categoria =").append(id_cat_edit);
+try{//REALIZAR LA CONSULTA
+    
+ResultSet resultadoSQL = this.conn.consultaSQL(miSQL.toString());
+while(resultadoSQL.next()){
+categoria.setId_categoria(resultadoSQL.getInt("id_categoria"));
+categoria.setNom_categoria(resultadoSQL.getString("nom_categoria"));
+categoria.setEstado_categoria(resultadoSQL.getInt("estado_categoria"));
+
+}
+
+}catch(Exception e){
+    
+}finally{
+
+this.conn.cerrarConexion(); //CERRAR CONEXION
+}
+
+return categoria;
+
+}
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     @Override
     public boolean guardarCat(Categoria categoria) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
