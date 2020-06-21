@@ -1,4 +1,3 @@
-
 package Controller;
 
 import DAO.CategoriaDAO;
@@ -14,95 +13,105 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
-
 public class Categorias extends HttpServlet {
 
-
+    protected void listaCategorias(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        
+        //Crear instancia a CategoriaDAO
+        CategoriaDAO categoria = new CategoriaDAOImplementar();
+        //Crear instancia de sesión; se le da true para crear la sesión.
+        HttpSession session = request.getSession(true);
+        session.setAttribute("lista", categoria.Listar()); //lista es el nombre de la variable de sesión.
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Vistas-Categorias/listarCategorias.jsp");
+        dispatcher.forward(request, response);
+    
+    }
+    
+    protected void borrarCategoria(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        
+        
+        RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/Vistas-Categorias/listarCategorias.jsp");
+        dispatcher.forward(request, response);
+    }
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Categorias</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Categorias at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+        
     }
 
-   
+    
     @Override
- protected void doGet(HttpServletRequest request, HttpServletResponse response)
-throws ServletException, IOException {
-     
-String parametro = request.getParameter("opcion"); //Captura  el parametro que se esta enviando
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+       
+        //Se captura el parámetro que se esta enviando.
+        String parametro = request.getParameter("opcion");
+        
+        
+        //Evaluar si el parámetro es crear o listar o cualquier otro.
+        
+        if(parametro.equals("crear")){
+            //Vista o formulario para registrar nueva categoria.
+            String pagina = "/Vistas-Categorias/crearCategoria.jsp";
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(pagina);
+            dispatcher.forward(request, response);
+            
+        }else if(parametro.equals("listar")){
+            this.listaCategorias(request, response);
+            
+        }else if(parametro.equals("modificar")){
+            //Se efectua el casting o conversión de datos porque lo ingresado en el formulario es texto.
+            int id_categoria = Integer.parseInt(request.getParameter("id_cat"));
+            String nom_categoria = request.getParameter("nombre_cat");
+            int estado_categoria = Integer.parseInt(request.getParameter("estado_cat"));
+            
+            String pagina = "/Vistas-Categorias/crearCategoria.jsp?id_c="+id_categoria+"&&nombre_c="+nom_categoria+"&&estado_c="+estado_categoria+"&&senal=1";
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(pagina);
+            dispatcher.forward(request, response);
+            
+        }else if(parametro.equals("eliminar")){
+            int del_id = Integer.parseInt(request.getParameter("id"));
+            CategoriaDAO categoria = new CategoriaDAOImplementar();
+            categoria.borrarCat(del_id);    
+            this.listaCategorias(request, response);
+        }
+        
+    }
 
-if(parametro.equals("crear")){ //EVALUAR SI EL PARAMETRO ES CREAR O LISTAR O CUALQUIER  OTRO
-String pagina= "/Vistas-Categorias/crearCategoria.jsp";    //VISTA O FORMULARIO PARA REGISTRAR NUEVA CATEGORIA
-
-RequestDispatcher dispatcher =  getServletContext().getRequestDispatcher(pagina);
-dispatcher.forward(request, response);
-}else{
-     
-this.listaCategorias(request, response);
-}
-}
-
+    
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
  
+        
+ 
+        Categoria categoria = new Categoria();
+        //Se efectua el casting o conversión de datos porque lo ingresado en el formulario es texto.
+        int id_categoria = Integer.parseInt(request.getParameter("id_categoria"));
+        String nom_categoria = request.getParameter("txtNomCategoria");
+        int estado_categoria = Integer.parseInt(request.getParameter("txtEstadoCategoria"));
+        
+        categoria.setId_categoria(id_categoria);
+        categoria.setNom_categoria(nom_categoria);
+        categoria.setEstado_categoria(estado_categoria);
+        
+        CategoriaDAO guardarCategoria = new CategoriaDAOImplementar();
+        guardarCategoria.guardarCat(categoria);
+        
+        this.listaCategorias(request, response);
+        
+    }
 
-@Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
-throws ServletException, IOException {
-Categoria categoria = new Categoria();
-
-//SE EFECTUA EL CASTING O CONVERSION  DE DATOS PORQUE LO INGRESADO EN EL FORMULARIO ES TEXTO
-
-categoria.setId_categoria(Integer.parseInt(request.getParameter("id_categoria")));
-categoria.setNom_categoria(request.getParameter("txtNomCategoria"));
-categoria.setEstado_categoria(Integer.parseInt(request.getParameter("txtEstadoCategoria")));
-
-
-CategoriaDAO guardaCategoria = new CategoriaDAOImplementar();
-
-guardaCategoria.guardarCat(categoria);
-this.listaCategorias(request, response);
-
-}
-    
-    
-    
     
     @Override
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
     
-    
-protected void  listaCategorias(HttpServletRequest request, HttpServletResponse response)
-throws ServletException, IOException {
-    
-response.setContentType("text/html; charset=UTF-8");
-//CREAR LA INSTANCIA A CATEGORIA DAO
-
-CategoriaDAO categoria = new CategoriaDAOImplementar();
-
-//CREAR INSTANCIA DE SESION  SE LE DA TRUE PARA CREAR LA SECCION
-
-HttpSession sesion = request.getSession(true);
-sesion.setAttribute("lista", categoria.Listar());  //Lista es el nombre de la sesion
-RequestDispatcher dispatcher =  getServletContext().getRequestDispatcher("/Vistas-Categorias/listarCategoria.jsp");
-
-
-dispatcher.forward(request, response);
-
 }
-}
-
-
-    
-

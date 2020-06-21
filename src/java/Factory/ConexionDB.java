@@ -1,74 +1,65 @@
-
 package Factory;
 
-import java.sql.*;
-
+import java.sql.Statement;
+import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public abstract class ConexionDB{
+public abstract class ConexionDB {
+    protected String[] parametros;
+    protected Connection conexion;
     
-protected String [] parametros; //Array que recibe los parametros de la conexion 
-protected Connection conexion;
-
-//EL SIGUIENTE METODO ABSTRACTO NO SE IMPLEMENTA SOLO SE DECLARA
-//IMPLEMENTARA EN LA SUBCLASE
-
-abstract Connection open(); //Metodo abstracto que devuelve un objeto conecction
-
-
-public ResultSet consultaSQL(String consulta){
-Statement st; //OBJETO STATEMENT EN EL ENCARGADO DE EJECUTAR LAS CONSULTAS 
-ResultSet rs= null; //TABLA TEMPORAL DONDE SE ALMACENAN LOS DATOS 
-
-try{
-st= conexion.createStatement();
-rs= st.executeQuery(consulta); //Se ejecuta la consulta
-
+    //El siguiente método abstracto no se implementa solamente se declara, se
+    //implementará en la subclase.
     
-}catch(SQLException ex){
+    abstract Connection open(); //Método abstracto que devuelve un objeto connection.
     
-ex.printStackTrace();
-
-}
-return rs;
-}
-
-
-//METODO PARA EJECUTAR
-
-public boolean ejecutarSQL(String consulta){
-Statement st; //OBJETO ES ELL ENCARGADO DE EJECUTAR LAS CONSULTAS
-boolean guardar = true;
-
-try{
-st= conexion.createStatement();
-st.executeUpdate(consulta); //Se ejecuta la consulta
-
- 
-}catch(SQLException ex){
+    //Método que se encarga de ejecutar la consulta.
+    public ResultSet consultaSQL(String consulta){
+        //Objeto Statement es el encargado de ejecutar las consultas.
+        Statement st;
+        //Tabla temporal donde se almacenan los datos.
+        ResultSet rs = null;
+        try{
+            st = conexion.createStatement();
+            rs = st.executeQuery(consulta);
+        }catch(SQLException ex){
+            ex.printStackTrace();
+        }
+        
+        return rs;        
+    }
     
-guardar = false;
-ex.printStackTrace();
-
-}
-return guardar;
-}
-
-
-//METODO PARA CERRAR LA CONEXION
-public boolean cerrarConexion(){
-boolean ok = true;
-try{
-conexion.close();
-
     
-}catch(Exception ex){
+    //Método para ejecutar.
+    public boolean ejecutarSQL(String consulta){
+        //Objeto Statement es el encargado de ejecutar las consultas.
+        Statement st;
+        boolean guardar = true;
+        
+        try{
+            st = conexion.createStatement();
+            st.executeUpdate(consulta);
+            
+        }catch(SQLException ex){
+            guardar = false;
+            ex.printStackTrace();
+        }
+        return guardar;        
+    }
     
-ok= false;
-
-ex.printStackTrace();
-
-}
-return ok;
-}
+    
+    //Método para cerrar la conexión.
+    public boolean cerrarConexion(){
+        boolean ok = true;
+        try{
+            conexion.close();
+        }catch(Exception ex){
+            ok = false;
+            ex.printStackTrace();
+        }
+        return ok;  
+    }
+   
+    
 }
